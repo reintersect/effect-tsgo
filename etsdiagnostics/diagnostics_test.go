@@ -120,3 +120,34 @@ func TestRunProjectJSON(t *testing.T) {
 		t.Fatalf("message includes redundant rule name: %q", diagnostic.Message)
 	}
 }
+
+func TestRunProjectReferencesJSON(t *testing.T) {
+	t.Parallel()
+
+	cwd, err := filepath.Abs("testdata/native-diagnostics-references")
+	if err != nil {
+		t.Fatal(err)
+	}
+	request, err := json.Marshal(request{
+		CWD: cwd, Project: "tsconfig.json", Format: "json",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	if status := Run(context.Background(), []string{string(request)}, &stdout, &stderr); status != 1 {
+		t.Fatalf("unexpected status %d; stderr:\n%s", status, stderr.String())
+	}
+	var output jsonOutput
+	if err := json.Unmarshal(stdout.Bytes(), &output); err != nil {
+		t.Fatalf("invalid JSON output: %v\n%s", err, stdout.String())
+	}
+	if len(output.Diagnostics) != 1 {
+		t.Fatalf("expected one diagnostic, got %d", len(output.Diagnostics))
+	}
+	diagnostic := output.Diagnostics[0]
+	if diagnostic.Name != "asyncFunction" || !strings.HasSuffix(filepath.ToSlash(diagnostic.File), "/package/main.ts") {
+		t.Fatalf("unexpected diagnostic: %#v", diagnostic)
+	}
+}

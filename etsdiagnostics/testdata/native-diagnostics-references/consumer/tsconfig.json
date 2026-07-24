@@ -1,0 +1,14 @@
+{
+  "extends": "../base.json",
+  "files": ["main.ts"],
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@effect/language-service",
+        "diagnosticSeverity": {
+          "asyncFunction": "off"
+        }
+      }
+    ]
+  }
+}

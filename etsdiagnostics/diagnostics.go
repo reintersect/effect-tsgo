@@ -148,15 +148,20 @@ func collect(ctx context.Context, req request, override *etscore.EffectPluginOpt
 	})
 	defer session.Close()
 
-	targets := make([]string, 0)
-	seenTargets := make(map[tspath.Path]struct{})
-	addTarget := func(fileName string) {
-		path := tspath.ToPath(fileName, req.CWD, fs.UseCaseSensitiveFileNames())
-		if _, seen := seenTargets[path]; seen {
+	type diagnosticTarget struct {
+		fileName    string
+		projectPath tspath.Path
+	}
+	targets := make([]diagnosticTarget, 0)
+	seenTargets := make(map[[2]tspath.Path]struct{})
+	addTarget := func(fileName string, projectPath tspath.Path) {
+		filePath := tspath.ToPath(fileName, req.CWD, fs.UseCaseSensitiveFileNames())
+		key := [2]tspath.Path{filePath, projectPath}
+		if _, seen := seenTargets[key]; seen {
 			return
 		}
-		seenTargets[path] = struct{}{}
-		targets = append(targets, fileName)
+		seenTargets[key] = struct{}{}
+		targets = append(targets, diagnosticTarget{fileName: fileName, projectPath: projectPath})
 	}
 
 	if req.Project != "" {
@@ -176,7 +181,7 @@ func collect(ctx context.Context, req request, override *etscore.EffectPluginOpt
 					continue
 				}
 				for _, fileName := range configuredProject.CommandLine.FileNames() {
-					addTarget(fileName)
+					addTarget(fileName, configuredProject.ConfigFilePath())
 				}
 			}
 		})
@@ -190,7 +195,7 @@ func collect(ctx context.Context, req request, override *etscore.EffectPluginOpt
 		if err := updateSession(ctx, session, &project.APISnapshotRequest{OpenFiles: openFiles}); err != nil {
 			return nil, summary{}, err
 		}
-		addTarget(fileName)
+		addTarget(fileName, "")
 	}
 
 	resultSummary := summary{TotalFiles: len(targets)}
@@ -207,17 +212,22 @@ func collect(ctx context.Context, req request, override *etscore.EffectPluginOpt
 
 	var collectErr error
 	session.WithSnapshotLoadingProjectTree(ctx, nil, func(snapshot *project.Snapshot) {
-		for index, fileName := range targets {
+		for index, target := range targets {
 			if req.Progress {
-				fmt.Fprintf(stderr, "[%d/%d] %60s\r", index+1, len(targets), truncateLeft(fileName, 60))
+				fmt.Fprintf(stderr, "[%d/%d] %60s\r", index+1, len(targets), truncateLeft(target.fileName, 60))
 			}
-			uri := lsconv.FileNameToDocumentURI(fileName)
-			configuredProject := snapshot.GetDefaultProject(uri)
+			var configuredProject *project.Project
+			if target.projectPath != "" {
+				configuredProject = snapshot.ProjectCollection.GetProjectByPath(target.projectPath)
+			} else {
+				uri := lsconv.FileNameToDocumentURI(target.fileName)
+				configuredProject = snapshot.GetDefaultProject(uri)
+			}
 			if configuredProject == nil || configuredProject.GetProgram() == nil {
 				continue
 			}
 			program := configuredProject.GetProgram()
-			sourceFile := program.GetSourceFile(fileName)
+			sourceFile := program.GetSourceFile(target.fileName)
 			if sourceFile == nil {
 				continue
 			}
