@@ -17,6 +17,16 @@
 > and revalidates all patches, exactly as upstream does. If that automated PR fails while applying
 > `028-nativepath-realpath-darwin.patch`, upstream changed `internal/nativepath/realpath_darwin.go`
 > — re-port the patch (or, if the change *is* the fix, retire the fork).
+>
+> **CI caveats in this organization:** the GitHub enterprise policy forces a read-only default
+> `GITHUB_TOKEN` and forbids Actions from creating pull requests, and GitHub does not deliver
+> push/pull_request events to this fork's workflows. Consequences: `update-typescript-go.yml` and
+> `version.yml` cannot open their PRs with `GITHUB_TOKEN` (branch pushes with explicit job-level
+> `contents: write` still work) — either add a fine-grained PAT secret (e.g. `GH_PAT` with
+> `contents: write` + `pull-requests: write` on this repo) and switch those workflows to it, or run
+> the changesets/version and upstream-sync steps locally and push. Releases run via
+> `workflow_dispatch` on `release.yml` with the `release_sha` input (the Version Packages commit on
+> `main`); the merge of a Version Packages PR will not trigger it automatically.
 
 A wrapper around [TypeScript-Go](https://github.com/microsoft/TypeScript-Go) that builds the Effect Language Service, providing Effect-TS diagnostics and quick fixes.
 This project targets **Effect V4** (codename: "smol") primarily and also Effect V3.
@@ -99,6 +109,7 @@ Some diagnostics are off by default or have a default severity of suggestion, bu
     <tr><td><code>tryCatchInEffectGen</code></td><td>💡</td><td></td><td>Discourages try/catch in Effect generators in favor of Effect error handling</td><td>✓</td><td>✓</td></tr>
     <tr><td><code>unknownInEffectCatch</code></td><td>⚠️</td><td></td><td>Warns when catch callbacks return unknown instead of typed errors</td><td>✓</td><td>✓</td></tr>
     <tr><td colspan="6"><strong>Effect-native</strong> <em>Prefer Effect-native APIs and abstractions when available.</em></td></tr>
+    <tr><td><code>abortControllerInEffect</code></td><td>💡</td><td></td><td>Warns when manually constructing AbortController inside Effect generators instead of using Effect.abortSignal</td><td></td><td>✓</td></tr>
     <tr><td><code>asyncFunction</code></td><td>➖</td><td></td><td>Warns when declaring async functions and suggests using Effect values and Effect.gen for async control flow</td><td>✓</td><td>✓</td></tr>
     <tr><td><code>cryptoRandomUUID</code></td><td>➖</td><td></td><td>Warns when using crypto.randomUUID() outside Effect generators instead of the Effect Random module, which uses Effect-injected randomness rather than the crypto module behind the scenes</td><td></td><td>✓</td></tr>
     <tr><td><code>cryptoRandomUUIDInEffect</code></td><td>➖</td><td></td><td>Warns when using crypto.randomUUID() inside Effect generators instead of the Effect Random module, which uses Effect-injected randomness rather than the crypto module behind the scenes</td><td></td><td>✓</td></tr>
