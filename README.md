@@ -17,6 +17,16 @@
 > and revalidates all patches, exactly as upstream does. If that automated PR fails while applying
 > `028-nativepath-realpath-darwin.patch`, upstream changed `internal/nativepath/realpath_darwin.go`
 > — re-port the patch (or, if the change *is* the fix, retire the fork).
+>
+> **CI caveats in this organization:** the GitHub enterprise policy forces a read-only default
+> `GITHUB_TOKEN` and forbids Actions from creating pull requests, and GitHub does not deliver
+> push/pull_request events to this fork's workflows. Consequences: `update-typescript-go.yml` and
+> `version.yml` cannot open their PRs with `GITHUB_TOKEN` (branch pushes with explicit job-level
+> `contents: write` still work) — either add a fine-grained PAT secret (e.g. `GH_PAT` with
+> `contents: write` + `pull-requests: write` on this repo) and switch those workflows to it, or run
+> the changesets/version and upstream-sync steps locally and push. Releases run via
+> `workflow_dispatch` on `release.yml` with the `release_sha` input (the Version Packages commit on
+> `main`); the merge of a Version Packages PR will not trigger it automatically.
 
 A wrapper around [TypeScript-Go](https://github.com/microsoft/TypeScript-Go) that builds the Effect Language Service, providing Effect-TS diagnostics and quick fixes.
 This project targets **Effect V4** (codename: "smol") primarily and also Effect V3.
