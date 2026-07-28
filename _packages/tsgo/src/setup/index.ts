@@ -9,7 +9,7 @@ import * as upstreamJson from "../../upstream.json" with { type: "json" }
 import * as pkgJson from "../../package.json" with { type: "json" }
 
 export const setupCommand = Command.make("setup").pipe(
-  Command.withDescription("Setup @effect/tsgo for the given project using an interactive CLI."),
+  Command.withDescription("Setup @reintersect/effect-tsgo for the given project using an interactive CLI."),
   Command.withHandler(() =>
     Effect.gen(function*() {
       const path = yield* Path.Path

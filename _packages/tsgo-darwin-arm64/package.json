@@ -1,15 +1,15 @@
 {
-  "name": "@effect/tsgo-darwin-arm64",
-  "version": "0.24.3",
+  "name": "@reintersect/effect-tsgo-darwin-arm64",
+  "version": "0.25.0",
   "description": "Effect Language Service for TypeScript-Go — Effect-specific diagnostics and hover features.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Effect-TS/tsgo.git",
+    "url": "https://github.com/reintersect/effect-tsgo.git",
     "directory": "_packages/tsgo-darwin-arm64"
   },
-  "bugs": "https://github.com/Effect-TS/tsgo/issues",
-  "homepage": "https://github.com/Effect-TS/tsgo#readme",
+  "bugs": "https://github.com/reintersect/effect-tsgo/issues",
+  "homepage": "https://github.com/reintersect/effect-tsgo#readme",
   "publishConfig": {
     "access": "public",
     "provenance": true
