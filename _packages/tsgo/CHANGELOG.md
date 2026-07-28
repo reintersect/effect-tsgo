@@ -1,5 +1,11 @@
 # @effect/tsgo
 
+## 0.27.0
+
+### Minor Changes
+
+- 701a607: Add the `abortControllerInEffect` diagnostic for global `AbortController` construction inside Effect generator contexts, suggesting `Effect.abortSignal` for Effect-managed cancellation.
+
 ## 0.26.0
 
 ### Minor Changes
