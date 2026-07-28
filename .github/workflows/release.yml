@@ -5,6 +5,15 @@ on:
     types: [closed]
     branches:
       - main
+  # Fork addition: GitHub does not reliably deliver push/pull_request events to
+  # workflows in this fork, so allow running the release manually against an
+  # explicit commit on main (the Version Packages merge commit).
+  workflow_dispatch:
+    inputs:
+      release_sha:
+        description: Commit SHA on main to release (the Version Packages merge commit)
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -17,9 +26,10 @@ concurrency:
 jobs:
   build:
     if: >-
-      github.event_name == 'pull_request' &&
+      (github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
       github.event.pull_request.merged == true &&
-      github.event.pull_request.head.ref == 'changeset-release/main' &&
+      github.event.pull_request.head.ref == 'changeset-release/main')) &&
       github.repository_owner == 'reintersect'
     name: Build ${{ matrix.binary.name }} ${{ matrix.npm_target }}
     runs-on: ubuntu-latest
@@ -36,7 +46,7 @@ jobs:
           - linux-arm
         binary:
           - name: tsc-next
-            ref: ${{ github.event.pull_request.merge_commit_sha }}
+            ref: ${{ inputs.release_sha || github.event.pull_request.merge_commit_sha }}
           - name: tsc
             ref: generated/latest
     steps:
@@ -77,10 +87,10 @@ jobs:
         run: pnpm setup-repo --ci
 
       - name: Sync Effect version from release commit
-        if: matrix.binary.ref != github.event.pull_request.merge_commit_sha
+        if: matrix.binary.ref != (inputs.release_sha || github.event.pull_request.merge_commit_sha)
         run: |
-          git fetch --depth=1 origin "${{ github.event.pull_request.merge_commit_sha }}"
-          git checkout "${{ github.event.pull_request.merge_commit_sha }}" -- _packages/tsgo/package.json
+          git fetch --depth=1 origin "${{ inputs.release_sha || github.event.pull_request.merge_commit_sha }}"
+          git checkout "${{ inputs.release_sha || github.event.pull_request.merge_commit_sha }}" -- _packages/tsgo/package.json
           bash _tools/version-prepare.sh
 
       - name: Build ${{ matrix.binary.name }} ${{ matrix.npm_target }}
@@ -96,9 +106,10 @@ jobs:
 
   publish:
     if: >-
-      github.event_name == 'pull_request' &&
+      (github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
       github.event.pull_request.merged == true &&
-      github.event.pull_request.head.ref == 'changeset-release/main' &&
+      github.event.pull_request.head.ref == 'changeset-release/main')) &&
       github.repository_owner == 'reintersect'
     name: Publish Packages
     runs-on: ubuntu-latest
@@ -108,7 +119,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          ref: ${{ inputs.release_sha || github.event.pull_request.merge_commit_sha }}
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -154,8 +165,8 @@ jobs:
         run: pnpm changeset:publish
         env:
           NPM_CONFIG_PROVENANCE: "true"
-          # Provenance requires npm Trusted Publishing (OIDC) to be registered for
-          # every package in this workflow's repo/workflow pair. Fallback if that is
-          # not set up yet: mint an npm automation token, store it as the NPM_TOKEN
-          # repository secret, remove NPM_CONFIG_PROVENANCE above, and uncomment:
-          # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Token-based auth for the first publishes (the packages must exist on
+          # npm before Trusted Publishing can be registered for them). Once
+          # Trusted Publishing is configured for all eight packages against this
+          # repo + workflow, remove NODE_AUTH_TOKEN and rely on OIDC alone.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
