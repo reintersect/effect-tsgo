@@ -1,5 +1,5 @@
 diff --git a/internal/nativepath/realpath_darwin.go b/internal/nativepath/realpath_darwin.go
-index afc9384cc6a..58cd84b3975 100644
+index afc9384c..58cd84b3 100644
 --- a/internal/nativepath/realpath_darwin.go
 +++ b/internal/nativepath/realpath_darwin.go
 @@ -1,6 +1,7 @@
@@ -97,10 +97,10 @@ index afc9384cc6a..58cd84b3975 100644
  }
 diff --git a/internal/nativepath/realpath_darwin_test.go b/internal/nativepath/realpath_darwin_test.go
 new file mode 100644
-index 00000000000..6f63dfcbb41
+index 00000000..59f3176a
 --- /dev/null
 +++ b/internal/nativepath/realpath_darwin_test.go
-@@ -0,0 +1,100 @@
+@@ -0,0 +1,172 @@
 +package nativepath
 +
 +import (
@@ -200,4 +200,76 @@ index 00000000000..6f63dfcbb41
 +		assert.NilError(t, err)
 +		assert.Equal(t, got, canonical(dir))
 +	})
++}
++
++// pnpm resolves the same package through its virtual-store path and through a
++// workspace node_modules symlink. Both spellings must produce one canonical
++// path — for copied packages (nlink == 1 files, pnpm patchedDependencies) and
++// for hardlink-deduplicated files alike — even while concurrent lookups churn
++// the kernel name cache. A divergence gives the compiler two module
++// identities for one file and produces phantom type errors.
++func TestRealpathSymlinkedPackageDir(t *testing.T) {
++	t.Parallel()
++
++	tmp := t.TempDir()
++
++	canonical := func(path string) string {
++		resolved, err := filepath.EvalSymlinks(path)
++		assert.NilError(t, err)
++		return resolved
++	}
++
++	// store/pkg mirrors node_modules/.pnpm/<pkg>/node_modules/<pkg>
++	storeDir := filepath.Join(tmp, "store", "pkg", "dist")
++	assert.NilError(t, os.MkdirAll(storeDir, 0o777))
++	copied := filepath.Join(storeDir, "copied.d.ts")
++	assert.NilError(t, os.WriteFile(copied, []byte("export {};\n"), 0o666))
++	linked := filepath.Join(storeDir, "linked.d.ts")
++	assert.NilError(t, os.WriteFile(linked, []byte("export {};\n"), 0o666))
++	sibling := filepath.Join(tmp, "store", "sibling.d.ts")
++	assert.NilError(t, os.Link(linked, sibling))
++
++	// ws/node_modules/pkg mirrors packages/<ws>/node_modules/<pkg>
++	wsModules := filepath.Join(tmp, "ws", "node_modules")
++	assert.NilError(t, os.MkdirAll(wsModules, 0o777))
++	symlinkPkg := filepath.Join(wsModules, "pkg")
++	assert.NilError(t, os.Symlink(filepath.Join(tmp, "store", "pkg"), symlinkPkg))
++
++	spellings := map[string]string{
++		filepath.Join(tmp, "store", "pkg", "dist", "copied.d.ts"): canonical(copied),
++		filepath.Join(symlinkPkg, "dist", "copied.d.ts"):          canonical(copied),
++		filepath.Join(tmp, "store", "pkg", "dist", "linked.d.ts"): canonical(linked),
++		filepath.Join(symlinkPkg, "dist", "linked.d.ts"):          canonical(linked),
++		filepath.Join(tmp, "store", "pkg"):                        canonical(filepath.Join(tmp, "store", "pkg")),
++		symlinkPkg:                                                canonical(filepath.Join(tmp, "store", "pkg")),
++	}
++
++	// churn the name cache from concurrent lookups of every spelling
++	stop := make(chan struct{})
++	done := make(chan struct{})
++	go func() {
++		defer close(done)
++		for {
++			select {
++			case <-stop:
++				return
++			default:
++				for path := range spellings {
++					f, err := os.Open(path)
++					if err == nil {
++						f.Close()
++					}
++				}
++			}
++		}
++	}()
++	defer func() { close(stop); <-done }()
++
++	for range 200 {
++		for path, want := range spellings {
++			got, err := Realpath(path)
++			assert.NilError(t, err)
++			assert.Equal(t, got, want, "input path %s", path)
++		}
++	}
 +}
