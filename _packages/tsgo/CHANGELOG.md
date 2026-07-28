@@ -1,5 +1,31 @@
 # @effect/tsgo
 
+## 0.26.0
+
+### Minor Changes
+
+- 58d2eb9: Add the V4-only `catchTagToCatchReason` diagnostic and identity-preserving quick fixes for `Effect.catchTag` handlers that re-fail unmatched `reason._tag` branches.
+- bb09f28: Add the `catchChainToFirstSuccessOf` diagnostic for consecutive error-independent `Effect.catch` fallbacks whose error channel is preserved by `Effect.firstSuccessOf`.
+- c048582: Add the `preferUnsafeConstructor` diagnostic and quickfix: `Effect.runSync` applied directly to a pure effect-package constructor call (e.g. `Effect.runSync(Scope.make())`) is reported when the same module exports a type-equivalent synchronous `*Unsafe` sibling, with a fix rewriting to `Scope.makeUnsafe()` while preserving arguments and type arguments.
+- 7af1a90: Add the `promiseInEffectSuccess` diagnostic for Promise types that enter Effect success channels instead of being awaited.
+
+### Patch Changes
+
+- 989dc33: Fork of `@effect/tsgo` published as `@reintersect/effect-tsgo`, carrying
+  [microsoft/typescript-go#4578](https://github.com/microsoft/typescript-go/pull/4578)
+  as `_patches/028-nativepath-realpath-darwin.patch`. The upstream `F_GETPATH`
+  fast path in `internal/nativepath/realpath_darwin.go` can return any hardlink
+  sibling's name for files with `nlink > 1` (nondeterministically under
+  concurrency), which breaks module resolution in pnpm and Nix stores on macOS
+  (microsoft/typescript-go#4262). The patch resolves the parent directory instead
+  for hardlinked regular files and re-attaches the final component.
+
+  All packages are renamed from `@effect/tsgo*` to `@reintersect/effect-tsgo*`;
+  the CLI bin name stays `effect-tsgo`. This fork retires as soon as upstream
+  merges the fix.
+
+- 5f4fd3e: Update to [`typescript@next`](https://www.npmjs.com/package/typescript/v/7.1.0-dev.20260727.1), which ships [`typescript-go`](https://github.com/microsoft/typescript-go/commit/8d29e62f3585c2fb5179e4412895aa3a8f40b9f5) commit `8d29e62f3585c2fb5179e4412895aa3a8f40b9f5`.
+
 ## 0.25.0
 
 ### Minor Changes
