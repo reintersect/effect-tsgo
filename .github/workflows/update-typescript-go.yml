@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   update:
     name: Update submodule
-    if: github.repository_owner == 'Effect-TS'
+    if: github.repository_owner == 'reintersect'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     outputs:
@@ -145,7 +145,7 @@ jobs:
         run: |
           cat > .changeset/update-typescript-go.md <<EOF
           ---
-          "@effect/tsgo": patch
+          "@reintersect/effect-tsgo": patch
           ---
 
           Update to \

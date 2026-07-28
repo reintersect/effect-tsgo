@@ -27,7 +27,7 @@ permissions: {}
 jobs:
   validate:
     name: Validate generated latest
-    if: github.repository_owner == 'Effect-TS'
+    if: github.repository_owner == 'reintersect'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:

@@ -16,7 +16,7 @@ jobs:
   generate:
     name: Generate generated/latest
     if: >-
-      github.repository_owner == 'Effect-TS' &&
+      github.repository_owner == 'reintersect' &&
       (github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'Version Packages'))
     runs-on: ubuntu-latest
     timeout-minutes: 20
