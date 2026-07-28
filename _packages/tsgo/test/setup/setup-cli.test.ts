@@ -4,7 +4,7 @@ import { assess } from "../../src/setup/assessment.js"
 import { computeChanges } from "../../src/setup/changes.js"
 import type { Assessment, Editor, Target } from "../../src/setup/types.js"
 
-const TEST_SCHEMA_PATH = "./node_modules/@effect/tsgo/schema.json"
+const TEST_SCHEMA_PATH = "./node_modules/@reintersect/effect-tsgo/schema.json"
 
 /**
  * Create a test assessment input from plain objects
@@ -200,7 +200,7 @@ describe("Setup CLI", () => {
         version: "1.0.0",
         dependencies: {},
         devDependencies: {
-          "@effect/tsgo": "^0.1.0",
+          "@reintersect/effect-tsgo": "^0.1.0",
           typescript: "^5.0.0"
         }
       },
@@ -271,7 +271,7 @@ describe("Setup CLI", () => {
         version: "1.0.0",
         dependencies: {},
         devDependencies: {
-          "@effect/tsgo": "^0.0.1",
+          "@reintersect/effect-tsgo": "^0.0.1",
           typescript: "^5.0.0"
         }
       },
@@ -337,7 +337,7 @@ describe("Setup CLI", () => {
         name: "test-project",
         version: "1.0.0",
         devDependencies: {
-          "@effect/tsgo": "^0.1.0",
+          "@reintersect/effect-tsgo": "^0.1.0",
           typescript: "^5.0.0"
         },
         scripts: {
@@ -379,7 +379,7 @@ describe("Setup CLI", () => {
         name: "test-project",
         version: "1.0.0",
         devDependencies: {
-          "@effect/tsgo": "^0.1.0",
+          "@reintersect/effect-tsgo": "^0.1.0",
           typescript: "^5.0.0"
         },
         scripts: {
@@ -497,7 +497,7 @@ describe("Setup CLI", () => {
         version: "1.0.0",
         dependencies: {},
         devDependencies: {
-          "@effect/tsgo": "^0.1.0",
+          "@reintersect/effect-tsgo": "^0.1.0",
           typescript: "^5.0.0"
         }
       },
@@ -732,7 +732,7 @@ describe("Setup CLI", () => {
         version: "1.0.0",
         dependencies: {},
         devDependencies: {
-          "@effect/tsgo": "^0.0.5"
+          "@reintersect/effect-tsgo": "^0.0.5"
         }
       },
       {
@@ -779,7 +779,7 @@ describe("Setup CLI", () => {
         version: "1.0.0",
         dependencies: {},
         devDependencies: {
-          "@effect/tsgo": "^0.0.5"
+          "@reintersect/effect-tsgo": "^0.0.5"
         }
       },
       {

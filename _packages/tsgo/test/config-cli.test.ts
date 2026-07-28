@@ -35,7 +35,7 @@ describe("Config CLI", () => {
         name: "test-project",
         version: "1.0.0",
         devDependencies: {
-          "@effect/tsgo": "^0.1.0"
+          "@reintersect/effect-tsgo": "^0.1.0"
         },
         scripts: {
           prepare: "effect-tsgo patch"

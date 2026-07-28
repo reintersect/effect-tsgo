@@ -1,15 +1,15 @@
 {
-  "name": "@effect/tsgo",
+  "name": "@reintersect/effect-tsgo",
   "version": "0.25.0",
   "description": "Effect Language Service for TypeScript-Go — Effect-specific diagnostics and hover features.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Effect-TS/tsgo.git",
+    "url": "https://github.com/reintersect/effect-tsgo.git",
     "directory": "_packages/tsgo"
   },
-  "bugs": "https://github.com/Effect-TS/tsgo/issues",
-  "homepage": "https://github.com/Effect-TS/tsgo#readme",
+  "bugs": "https://github.com/reintersect/effect-tsgo/issues",
+  "homepage": "https://github.com/reintersect/effect-tsgo#readme",
   "publishConfig": {
     "access": "public",
     "provenance": true,
@@ -31,13 +31,13 @@
     "schema.json"
   ],
   "optionalDependencies": {
-    "@effect/tsgo-win32-x64": "workspace:*",
-    "@effect/tsgo-win32-arm64": "workspace:*",
-    "@effect/tsgo-linux-x64": "workspace:*",
-    "@effect/tsgo-linux-arm64": "workspace:*",
-    "@effect/tsgo-linux-arm": "workspace:*",
-    "@effect/tsgo-darwin-x64": "workspace:*",
-    "@effect/tsgo-darwin-arm64": "workspace:*"
+    "@reintersect/effect-tsgo-win32-x64": "workspace:*",
+    "@reintersect/effect-tsgo-win32-arm64": "workspace:*",
+    "@reintersect/effect-tsgo-linux-x64": "workspace:*",
+    "@reintersect/effect-tsgo-linux-arm64": "workspace:*",
+    "@reintersect/effect-tsgo-linux-arm": "workspace:*",
+    "@reintersect/effect-tsgo-darwin-x64": "workspace:*",
+    "@reintersect/effect-tsgo-darwin-arm64": "workspace:*"
   },
   "devDependencies": {
     "@effect/platform-node": "^4.0.0-beta.101",

@@ -5,7 +5,7 @@ import { assess } from "../../src/setup/assessment.js"
 import type { Assessment } from "../../src/setup/types.js"
 
 const TEST_TYPESCRIPT_VERSION = "7.1.0-dev.test"
-const TEST_SCHEMA_PATH = "./node_modules/@effect/tsgo/schema.json"
+const TEST_SCHEMA_PATH = "./node_modules/@reintersect/effect-tsgo/schema.json"
 
 /**
  * Helper to create an Assessment.Input and run assess() + computeChanges()
@@ -498,7 +498,7 @@ describe("computeChanges", () => {
         name: "test-project",
         version: "1.0.0",
         devDependencies: {
-          "@effect/tsgo": "0.0.4"
+          "@reintersect/effect-tsgo": "0.0.4"
         }
       }, null, 2)
 

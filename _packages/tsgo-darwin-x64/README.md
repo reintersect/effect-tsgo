@@ -1,1 +1,1 @@
-This is a platform-specific subpackage for `@effect/tsgo`. Refer to `@effect/tsgo` for documentation and usage.
+This is a platform-specific subpackage for `@reintersect/effect-tsgo`. Refer to `@reintersect/effect-tsgo` for documentation and usage.

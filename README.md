@@ -1,5 +1,23 @@
 # Effect Language Service (TypeScript-Go)
 
+> [!IMPORTANT]
+> **This is a fork.** `@reintersect/effect-tsgo` is [Effect-TS/tsgo](https://github.com/Effect-TS/tsgo) plus one extra patch,
+> [`_patches/028-nativepath-realpath-darwin.patch`](_patches/028-nativepath-realpath-darwin.patch)
+> ([microsoft/typescript-go#4578](https://github.com/microsoft/typescript-go/pull/4578)): the macOS
+> `F_GETPATH` realpath fast path can nondeterministically return a hardlink sibling's name for files
+> with `nlink > 1` ([microsoft/typescript-go#4262](https://github.com/microsoft/typescript-go/issues/4262)),
+> which breaks module resolution in pnpm- and Nix-style hardlink-deduplicated stores. All packages are
+> renamed to `@reintersect/effect-tsgo*`; the CLI bin name stays `effect-tsgo`.
+>
+> **Retirement condition:** as soon as upstream typescript-go merges #4578 (or otherwise removes the
+> darwin `F_GETPATH` fast path) and that lands in a `typescript` release consumed by `@effect/tsgo`,
+> this fork should be abandoned and consumers switched back to `@effect/tsgo`.
+>
+> **Maintenance:** the daily `update-typescript-go.yml` cron auto-bumps the `typescript-go` submodule
+> and revalidates all patches, exactly as upstream does. If that automated PR fails while applying
+> `028-nativepath-realpath-darwin.patch`, upstream changed `internal/nativepath/realpath_darwin.go`
+> — re-port the patch (or, if the change *is* the fix, retire the fork).
+
 A wrapper around [TypeScript-Go](https://github.com/microsoft/TypeScript-Go) that builds the Effect Language Service, providing Effect-TS diagnostics and quick fixes.
 This project targets **Effect V4** (codename: "smol") primarily and also Effect V3.
 
@@ -8,23 +26,23 @@ This project targets **Effect V4** (codename: "smol") primarily and also Effect 
 The setup of the TSGO version of the LSP can be performed via the command line interface:
 
 ```bash
-npx @effect/tsgo setup
+npx @reintersect/effect-tsgo setup
 ```
 
 This will guide you through the installation process, which includes:
-1. Adding the `@effect/tsgo` dependency to your project.
+1. Adding the `@reintersect/effect-tsgo` dependency to your project.
 2. Configuring your `tsconfig.json` to use the Effect Language Service plugin.
 3. Adjusting plugin options to your preference.
 4. Hinting at any additional editor configuration needed to ensure the LSP is active.
 
 > [!NOTE]
-> At the moment, you still need a native TypeScript install alongside `@effect/tsgo`: `typescript` >= 7 (e.g. `typescript@latest` or `typescript@next`) or an alias such as `@typescript/native`. `effect-tsgo patch` tries `typescript`, then `@typescript/native`, and accepts `--typescript-package <name>` to try a custom package name first.
+> At the moment, you still need a native TypeScript install alongside `@reintersect/effect-tsgo`: `typescript` >= 7 (e.g. `typescript@latest` or `typescript@next`) or an alias such as `@typescript/native`. `effect-tsgo patch` tries `typescript`, then `@typescript/native`, and accepts `--typescript-package <name>` to try a custom package name first.
 
 ## LSP-based linter
 
 The Effect LSP doubles as a tool to perform type-aware linting of Effect code.
 
-Linting can occur either during the `tsc` typecheck phase (with the benefit of running typechecking only once and caching the output), or via a dedicated `npx @effect/tsgo diagnostics --project tsconfig.json` command (with typechecking occurring again).
+Linting can occur either during the `tsc` typecheck phase (with the benefit of running typechecking only once and caching the output), or via a dedicated `npx @reintersect/effect-tsgo diagnostics --project tsconfig.json` command (with typechecking occurring again).
 
 When running in `tsc` mode, the Effect diagnostics are emitted as standard TypeScript diagnostics, and can be configured to affect the `tsc` exit code through the options `ignoreEffectSuggestionsInTscExitCode`, `ignoreEffectWarningsInTscExitCode`, and `ignoreEffectErrorsInTscExitCode`.
 

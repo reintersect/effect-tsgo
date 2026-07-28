@@ -20,7 +20,7 @@ jobs:
       github.event_name == 'pull_request' &&
       github.event.pull_request.merged == true &&
       github.event.pull_request.head.ref == 'changeset-release/main' &&
-      github.repository_owner == 'Effect-TS'
+      github.repository_owner == 'reintersect'
     name: Build ${{ matrix.binary.name }} ${{ matrix.npm_target }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -99,7 +99,7 @@ jobs:
       github.event_name == 'pull_request' &&
       github.event.pull_request.merged == true &&
       github.event.pull_request.head.ref == 'changeset-release/main' &&
-      github.repository_owner == 'Effect-TS'
+      github.repository_owner == 'reintersect'
     name: Publish Packages
     runs-on: ubuntu-latest
     needs: [build]
@@ -154,3 +154,8 @@ jobs:
         run: pnpm changeset:publish
         env:
           NPM_CONFIG_PROVENANCE: "true"
+          # Provenance requires npm Trusted Publishing (OIDC) to be registered for
+          # every package in this workflow's repo/workflow pair. Fallback if that is
+          # not set up yet: mint an npm automation token, store it as the NPM_TOKEN
+          # repository secret, remove NPM_CONFIG_PROVENANCE above, and uncomment:
+          # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

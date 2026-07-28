@@ -3,7 +3,7 @@
 exports[`Setup CLI > should add LSP plugin alongside existing plugins > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies",
     "file": "package.json",
   },
   {
@@ -24,7 +24,7 @@ exports[`Setup CLI > should add LSP plugin alongside existing plugins > package.
   "name": "test-project",
   "version": "1.0.0",
   "dependencies": {},
-"devDependencies": { "@effect/tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
+"devDependencies": { "@reintersect/effect-tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
 }"
 `;
 
@@ -42,7 +42,7 @@ exports[`Setup CLI > should add LSP plugin alongside existing plugins > tsconfig
 }
     ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
@@ -61,7 +61,7 @@ exports[`Setup CLI > should add LSP with VS Code editor selected and create new 
 exports[`Setup CLI > should add LSP with VS Code editor selected and create new settings file > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies",
     "file": "package.json",
   },
   {
@@ -92,7 +92,7 @@ exports[`Setup CLI > should add LSP with VS Code editor selected and create new 
   "name": "test-project",
   "version": "1.0.0",
   "dependencies": {},
-"devDependencies": { "@effect/tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
+"devDependencies": { "@reintersect/effect-tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
 }"
 `;
 
@@ -107,14 +107,14 @@ exports[`Setup CLI > should add LSP with VS Code editor selected and create new 
 	}
 ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
 exports[`Setup CLI > should add LSP with custom diagnostic severities when no plugin exists > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies",
     "file": "package.json",
   },
   {
@@ -135,7 +135,7 @@ exports[`Setup CLI > should add LSP with custom diagnostic severities when no pl
   "name": "test-project",
   "version": "1.0.0",
   "dependencies": {},
-"devDependencies": { "@effect/tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
+"devDependencies": { "@reintersect/effect-tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
 }"
 `;
 
@@ -154,7 +154,7 @@ exports[`Setup CLI > should add LSP with custom diagnostic severities when no pl
 	}
 ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
@@ -183,7 +183,7 @@ exports[`Setup CLI > should add custom diagnostic severities when plugin exists 
   "version": "1.0.0",
   "dependencies": {},
   "devDependencies": {
-    "@effect/tsgo": "^0.0.5",
+    "@reintersect/effect-tsgo": "^0.0.5",
 "typescript": "7.1.0-dev.test"
   }
 }"
@@ -204,14 +204,14 @@ exports[`Setup CLI > should add custom diagnostic severities when plugin exists 
       }
     ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
 exports[`Setup CLI > should generate changes for Astro-style configs using the legacy prepare command > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies; Add typescript@7.1.0-dev.test to devDependencies; Update prepare script to include patch command",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies; Add typescript@7.1.0-dev.test to devDependencies; Update prepare script to include patch command",
     "file": "package.json",
   },
   {
@@ -237,7 +237,7 @@ exports[`Setup CLI > should generate changes for Astro-style configs using the l
   "devDependencies": {
     "@effect/language-service": "^0.80.0",
     "typescript": "7.1.0-dev.test",
-"@effect/tsgo": "^0.0.5"
+"@reintersect/effect-tsgo": "^0.0.5"
   }
 }"
 `;
@@ -271,14 +271,14 @@ exports[`Setup CLI > should generate changes for Astro-style configs using the l
       }
     ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
 exports[`Setup CLI > should generate changes for adding LSP with defaults > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies",
     "file": "package.json",
   },
   {
@@ -299,7 +299,7 @@ exports[`Setup CLI > should generate changes for adding LSP with defaults > pack
   "name": "test-project",
   "version": "1.0.0",
   "dependencies": {},
-"devDependencies": { "@effect/tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
+"devDependencies": { "@reintersect/effect-tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
 }"
 `;
 
@@ -314,14 +314,14 @@ exports[`Setup CLI > should generate changes for adding LSP with defaults > tsco
 	}
 ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
 exports[`Setup CLI > should generate changes for adding LSP with prepare script > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies; Add scripts section with prepare script",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies; Add scripts section with prepare script",
     "file": "package.json",
   },
   {
@@ -343,7 +343,7 @@ exports[`Setup CLI > should generate changes for adding LSP with prepare script 
   "version": "1.0.0",
   "dependencies": {},
 "scripts": { "prepare": "effect-tsgo patch" },
-"devDependencies": { "@effect/tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
+"devDependencies": { "@reintersect/effect-tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
 }"
 `;
 
@@ -358,14 +358,14 @@ exports[`Setup CLI > should generate changes for adding LSP with prepare script 
 	}
 ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
 exports[`Setup CLI > should generate changes for removing LSP and prepare script > change summary 1`] = `
 [
   {
-    "description": "Remove @effect/tsgo from dependencies; Remove prepare script with patch command",
+    "description": "Remove @reintersect/effect-tsgo from dependencies; Remove prepare script with patch command",
     "file": "package.json",
   },
   {
@@ -407,7 +407,7 @@ exports[`Setup CLI > should generate changes for removing LSP and prepare script
 exports[`Setup CLI > should generate changes for removing LSP when already installed > change summary 1`] = `
 [
   {
-    "description": "Remove @effect/tsgo from dependencies",
+    "description": "Remove @reintersect/effect-tsgo from dependencies",
     "file": "package.json",
   },
   {
@@ -448,7 +448,7 @@ exports[`Setup CLI > should generate changes for removing LSP when already insta
 exports[`Setup CLI > should not override existing plugins when adding LSP plugin > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies",
     "file": "package.json",
   },
   {
@@ -469,7 +469,7 @@ exports[`Setup CLI > should not override existing plugins when adding LSP plugin
   "name": "test-project",
   "version": "1.0.0",
   "dependencies": {},
-"devDependencies": { "@effect/tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
+"devDependencies": { "@reintersect/effect-tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
 }"
 `;
 
@@ -493,7 +493,7 @@ exports[`Setup CLI > should not override existing plugins when adding LSP plugin
 }
     ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
@@ -524,7 +524,7 @@ exports[`Setup CLI > should preserve all existing VS Code settings from a real r
 exports[`Setup CLI > should preserve all existing VS Code settings from a real repository config > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies",
     "file": "package.json",
   },
   {
@@ -555,7 +555,7 @@ exports[`Setup CLI > should preserve all existing VS Code settings from a real r
   "name": "test-project",
   "version": "1.0.0",
   "dependencies": {},
-"devDependencies": { "@effect/tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
+"devDependencies": { "@reintersect/effect-tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
 }"
 `;
 
@@ -570,7 +570,7 @@ exports[`Setup CLI > should preserve all existing VS Code settings from a real r
 	}
 ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
@@ -589,7 +589,7 @@ exports[`Setup CLI > should preserve existing VS Code settings when adding LSP-s
 exports[`Setup CLI > should preserve existing VS Code settings when adding LSP-specific settings > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies",
     "file": "package.json",
   },
   {
@@ -620,7 +620,7 @@ exports[`Setup CLI > should preserve existing VS Code settings when adding LSP-s
   "name": "test-project",
   "version": "1.0.0",
   "dependencies": {},
-"devDependencies": { "@effect/tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
+"devDependencies": { "@reintersect/effect-tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
 }"
 `;
 
@@ -635,14 +635,14 @@ exports[`Setup CLI > should preserve existing VS Code settings when adding LSP-s
 	}
 ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
 exports[`Setup CLI > should remove only LSP patch command from prepare script with multiple commands > change summary 1`] = `
 [
   {
-    "description": "Remove @effect/tsgo from dependencies; Remove effect-tsgo patch command from prepare script",
+    "description": "Remove @reintersect/effect-tsgo from dependencies; Remove effect-tsgo patch command from prepare script",
     "file": "package.json",
   },
   {
@@ -687,7 +687,7 @@ exports[`Setup CLI > should remove only LSP patch command from prepare script wi
 exports[`Setup CLI > should remove only LSP plugin while preserving other plugins > change summary 1`] = `
 [
   {
-    "description": "Remove @effect/tsgo from dependencies",
+    "description": "Remove @reintersect/effect-tsgo from dependencies",
     "file": "package.json",
   },
   {
@@ -731,7 +731,7 @@ exports[`Setup CLI > should remove only LSP plugin while preserving other plugin
 exports[`Setup CLI > should replace existing tsconfig schema when adding LSP > change summary 1`] = `
 [
   {
-    "description": "Add @effect/tsgo@^0.0.5 to devDependencies",
+    "description": "Add @reintersect/effect-tsgo@^0.0.5 to devDependencies",
     "file": "package.json",
   },
   {
@@ -752,13 +752,13 @@ exports[`Setup CLI > should replace existing tsconfig schema when adding LSP > p
   "name": "test-project",
   "version": "1.0.0",
   "dependencies": {},
-"devDependencies": { "@effect/tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
+"devDependencies": { "@reintersect/effect-tsgo": "^0.0.5","typescript": "7.1.0-dev.test" }
 }"
 `;
 
 exports[`Setup CLI > should replace existing tsconfig schema when adding LSP > tsconfig.json 1`] = `
 "{
-  "$schema": "./node_modules/@effect/tsgo/schema.json",
+  "$schema": "./node_modules/@reintersect/effect-tsgo/schema.json",
   "compilerOptions": {
     "strict": true,
     "target": "ES2022",
@@ -774,7 +774,7 @@ exports[`Setup CLI > should replace existing tsconfig schema when adding LSP > t
 exports[`Setup CLI > should update LSP version when already installed with older version > change summary 1`] = `
 [
   {
-    "description": "Update @effect/tsgo from ^0.0.1 to ^0.0.5; Add typescript@7.1.0-dev.test to devDependencies",
+    "description": "Update @reintersect/effect-tsgo from ^0.0.1 to ^0.0.5; Add typescript@7.1.0-dev.test to devDependencies",
     "file": "package.json",
   },
   {
@@ -796,7 +796,7 @@ exports[`Setup CLI > should update LSP version when already installed with older
   "version": "1.0.0",
   "dependencies": {},
   "devDependencies": {
-    "@effect/tsgo": "^0.0.5",
+    "@reintersect/effect-tsgo": "^0.0.5",
     "typescript": "7.1.0-dev.test"
   }
 }"
@@ -813,7 +813,7 @@ exports[`Setup CLI > should update LSP version when already installed with older
       }
     ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
 
@@ -842,7 +842,7 @@ exports[`Setup CLI > should update custom diagnostic severities when plugin alre
   "version": "1.0.0",
   "dependencies": {},
   "devDependencies": {
-    "@effect/tsgo": "^0.0.5",
+    "@reintersect/effect-tsgo": "^0.0.5",
 "typescript": "7.1.0-dev.test"
   }
 }"
@@ -864,6 +864,6 @@ exports[`Setup CLI > should update custom diagnostic severities when plugin alre
       }
     ]
   },
-"$schema": "./node_modules/@effect/tsgo/schema.json"
+"$schema": "./node_modules/@reintersect/effect-tsgo/schema.json"
 }"
 `;
