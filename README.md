@@ -61,7 +61,7 @@ platform-specific):
 ```
 
 The extension tries `tsc` before `tsc-next` in that directory; both are Effect-patched. Requires
-`@reintersect/effect-tsgo-*` >= 0.27.1 — earlier tarballs shipped the binaries without the
+`@reintersect/effect-tsgo-*` >= 0.27.2 — earlier tarballs shipped the binaries without the
 executable bit, and the extension spawns them directly. The extension's package-based tsdk
 resolution hardcodes the `@typescript/<name>-<platform>-<arch>` scope, so pointing the setting at
 the main package directory does not work; use the `lib` directory form above (or keep using
