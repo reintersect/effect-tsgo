@@ -1679,6 +1679,11 @@
           "default": "suggestion",
           "description": "Suggests using Effect.mapError instead of Effect.catch + Effect.fail"
         },
+        "catchChainToFirstSuccessOf": {
+          "$ref": "#/definitions/effectLanguageServicePluginSeverityDefinition",
+          "default": "suggestion",
+          "description": "Suggests Effect.firstSuccessOf for consecutive error-independent Effect.catch fallbacks when the error type is preserved"
+        },
         "catchToIgnore": {
           "$ref": "#/definitions/effectLanguageServicePluginSeverityDefinition",
           "default": "suggestion",
@@ -1974,6 +1979,11 @@
           "default": "off",
           "description": "Disallows Schema.Schema.Type\u003ctypeof X\u003e in favor of typeof X.Type"
         },
+        "preferUnsafeConstructor": {
+          "$ref": "#/definitions/effectLanguageServicePluginSeverityDefinition",
+          "default": "suggestion",
+          "description": "Suggests replacing Effect.runSync of a pure effect constructor with the synchronous *Unsafe variant exported by the same module"
+        },
         "processEnv": {
           "$ref": "#/definitions/effectLanguageServicePluginSeverityDefinition",
           "default": "off",
@@ -1983,6 +1993,11 @@
           "$ref": "#/definitions/effectLanguageServicePluginSeverityDefinition",
           "default": "off",
           "description": "Warns when reading process.env inside Effect generators instead of using Effect Config"
+        },
+        "promiseInEffectSuccess": {
+          "$ref": "#/definitions/effectLanguageServicePluginSeverityDefinition",
+          "default": "warning",
+          "description": "Detects Promise types in Effect success channels where they are not awaited"
         },
         "redundantMapError": {
           "$ref": "#/definitions/effectLanguageServicePluginSeverityDefinition",

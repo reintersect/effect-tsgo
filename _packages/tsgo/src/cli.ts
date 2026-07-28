@@ -130,7 +130,7 @@ class PackagedBinaryVersionMismatchError extends Data.TaggedError("PackagedBinar
       "Tried:",
       tried,
       "",
-      "Install a matching @effect/tsgo release or a matching TypeScript version, or rerun with --force to use the newest packaged binary."
+      "Install a matching @reintersect/effect-tsgo release or a matching TypeScript version, or rerun with --force to use the newest packaged binary."
     ].join("\n")
   }
 }
@@ -356,7 +356,7 @@ const packageNamesWithPreferred = (preferredPackageName: Option.Option<string>):
 
 /**
  * Resolve the Effect-patched binary to copy over the native target. The
- * `@effect/tsgo-*` platform package ships `lib/tsc` (built from
+ * `@reintersect/effect-tsgo-*` platform package ships `lib/tsc` (built from
  * `generated/latest`) and `lib/tsc-next` (built from `main`). The adjacent JSON
  * metadata files identify the TypeScript gitHead each binary was built from.
  */
@@ -364,7 +364,7 @@ const getPackagedBinaryPath = (installedTypeScript: OfficialTypeScriptBinary, fo
   Effect.gen(function*() {
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
-    const packageName = "@effect/tsgo-" + process.platform + "-" + process.arch
+    const packageName = "@reintersect/effect-tsgo-" + process.platform + "-" + process.arch
     const selfRequire = nodeModule.createRequire(import.meta.url)
     const packageJsonPath: string = yield* Effect.try({
       try: () => selfRequire.resolve(packageName + "/package.json"),

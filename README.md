@@ -1,5 +1,23 @@
 # Effect Language Service (TypeScript-Go)
 
+> [!IMPORTANT]
+> **This is a fork.** `@reintersect/effect-tsgo` is [Effect-TS/tsgo](https://github.com/Effect-TS/tsgo) plus one extra patch,
+> [`_patches/028-nativepath-realpath-darwin.patch`](_patches/028-nativepath-realpath-darwin.patch)
+> ([microsoft/typescript-go#4578](https://github.com/microsoft/typescript-go/pull/4578)): the macOS
+> `F_GETPATH` realpath fast path can nondeterministically return a hardlink sibling's name for files
+> with `nlink > 1` ([microsoft/typescript-go#4262](https://github.com/microsoft/typescript-go/issues/4262)),
+> which breaks module resolution in pnpm- and Nix-style hardlink-deduplicated stores. All packages are
+> renamed to `@reintersect/effect-tsgo*`; the CLI bin name stays `effect-tsgo`.
+>
+> **Retirement condition:** as soon as upstream typescript-go merges #4578 (or otherwise removes the
+> darwin `F_GETPATH` fast path) and that lands in a `typescript` release consumed by `@effect/tsgo`,
+> this fork should be abandoned and consumers switched back to `@effect/tsgo`.
+>
+> **Maintenance:** the daily `update-typescript-go.yml` cron auto-bumps the `typescript-go` submodule
+> and revalidates all patches, exactly as upstream does. If that automated PR fails while applying
+> `028-nativepath-realpath-darwin.patch`, upstream changed `internal/nativepath/realpath_darwin.go`
+> — re-port the patch (or, if the change *is* the fix, retire the fork).
+
 A wrapper around [TypeScript-Go](https://github.com/microsoft/TypeScript-Go) that builds the Effect Language Service, providing Effect-TS diagnostics and quick fixes.
 This project targets **Effect V4** (codename: "smol") primarily and also Effect V3.
 
@@ -8,23 +26,23 @@ This project targets **Effect V4** (codename: "smol") primarily and also Effect 
 The setup of the TSGO version of the LSP can be performed via the command line interface:
 
 ```bash
-npx @effect/tsgo setup
+npx @reintersect/effect-tsgo setup
 ```
 
 This will guide you through the installation process, which includes:
-1. Adding the `@effect/tsgo` dependency to your project.
+1. Adding the `@reintersect/effect-tsgo` dependency to your project.
 2. Configuring your `tsconfig.json` to use the Effect Language Service plugin.
 3. Adjusting plugin options to your preference.
 4. Hinting at any additional editor configuration needed to ensure the LSP is active.
 
 > [!NOTE]
-> At the moment, you still need a native TypeScript install alongside `@effect/tsgo`: `typescript` >= 7 (e.g. `typescript@latest` or `typescript@next`) or an alias such as `@typescript/native`. `effect-tsgo patch` tries `typescript`, then `@typescript/native`, and accepts `--typescript-package <name>` to try a custom package name first.
+> At the moment, you still need a native TypeScript install alongside `@reintersect/effect-tsgo`: `typescript` >= 7 (e.g. `typescript@latest` or `typescript@next`) or an alias such as `@typescript/native`. `effect-tsgo patch` tries `typescript`, then `@typescript/native`, and accepts `--typescript-package <name>` to try a custom package name first.
 
 ## LSP-based linter
 
 The Effect LSP doubles as a tool to perform type-aware linting of Effect code.
 
-Linting can occur either during the `tsc` typecheck phase (with the benefit of running typechecking only once and caching the output), or via a dedicated `npx @effect/tsgo diagnostics --project tsconfig.json` command (with typechecking occurring again).
+Linting can occur either during the `tsc` typecheck phase (with the benefit of running typechecking only once and caching the output), or via a dedicated `npx @reintersect/effect-tsgo diagnostics --project tsconfig.json` command (with typechecking occurring again).
 
 When running in `tsc` mode, the Effect diagnostics are emitted as standard TypeScript diagnostics, and can be configured to affect the `tsc` exit code through the options `ignoreEffectSuggestionsInTscExitCode`, `ignoreEffectWarningsInTscExitCode`, and `ignoreEffectErrorsInTscExitCode`.
 
@@ -56,6 +74,7 @@ Some diagnostics are off by default or have a default severity of suggestion, bu
     <tr><td><code>nonObjectEffectServiceType</code></td><td>❌</td><td></td><td>Ensures Effect.Service types are objects, not primitives</td><td>✓</td><td></td></tr>
     <tr><td><code>outdatedApi</code></td><td>⚠️</td><td></td><td>Detects usage of APIs that have been removed or renamed in Effect v4</td><td></td><td>✓</td></tr>
     <tr><td><code>overriddenSchemaConstructor</code></td><td>❌</td><td>🔧</td><td>Prevents overriding constructors in Schema classes which breaks decoding behavior</td><td>✓</td><td>✓</td></tr>
+    <tr><td><code>promiseInEffectSuccess</code></td><td>⚠️</td><td></td><td>Detects Promise types in Effect success channels where they are not awaited</td><td>✓</td><td>✓</td></tr>
     <tr><td><code>schemaLiteralNonFinite</code></td><td>❌</td><td></td><td>Reports statically known non-finite numbers passed to Schema literal constructors</td><td></td><td>✓</td></tr>
     <tr><td><code>schemaOpaqueInstanceMember</code></td><td>❌</td><td></td><td>Disallows instance members in classes extending Schema.Opaque</td><td></td><td>✓</td></tr>
     <tr><td colspan="6"><strong>Anti-pattern</strong> <em>Discouraged patterns that often lead to bugs or confusing behavior.</em></td></tr>
@@ -71,6 +90,7 @@ Some diagnostics are off by default or have a default severity of suggestion, bu
     <tr><td><code>lazyPromiseInEffectSync</code></td><td>⚠️</td><td></td><td>Warns when Effect.sync lazily returns a Promise instead of using an async Effect constructor</td><td>✓</td><td>✓</td></tr>
     <tr><td><code>leakingRequirements</code></td><td>💡</td><td></td><td>Detects implementation services leaked in service methods</td><td>✓</td><td>✓</td></tr>
     <tr><td><code>multipleEffectProvide</code></td><td>⚠️</td><td>🔧</td><td>Warns against chaining Effect.provide calls which can cause service lifecycle issues</td><td>✓</td><td>✓</td></tr>
+    <tr><td><code>preferUnsafeConstructor</code></td><td>💡</td><td>🔧</td><td>Suggests replacing Effect.runSync of a pure effect constructor with the synchronous *Unsafe variant exported by the same module</td><td></td><td>✓</td></tr>
     <tr><td><code>returnEffectInGen</code></td><td>💡</td><td>🔧</td><td>Warns when returning an Effect in a generator causes nested Effect&lt;Effect&lt;...&gt;&gt;</td><td>✓</td><td>✓</td></tr>
     <tr><td><code>runEffectInsideEffect</code></td><td>💡</td><td>🔧</td><td>Suggests using Runtime or Effect.run*With methods instead of Effect.run* inside Effect contexts</td><td>✓</td><td>✓</td></tr>
     <tr><td><code>schemaSyncInEffect</code></td><td>💡</td><td></td><td>Suggests using Effect-based Schema methods instead of sync methods inside Effect generators</td><td>✓</td><td></td></tr>
@@ -102,6 +122,8 @@ Some diagnostics are off by default or have a default severity of suggestion, bu
     <tr><td><code>unsafeEffectTypeAssertion</code></td><td>➖</td><td>🔧</td><td>Detects unsafe type assertions that narrow Effect, Stream, or Layer error or requirements channels</td><td>✓</td><td>✓</td></tr>
     <tr><td colspan="6"><strong>Style</strong> <em>Cleanup, consistency, and idiomatic Effect code.</em></td></tr>
     <tr><td><code>catchAllToMapError</code></td><td>💡</td><td>🔧</td><td>Suggests using Effect.mapError instead of Effect.catch + Effect.fail</td><td>✓</td><td>✓</td></tr>
+    <tr><td><code>catchChainToFirstSuccessOf</code></td><td>💡</td><td></td><td>Suggests Effect.firstSuccessOf for consecutive error-independent Effect.catch fallbacks when the error type is preserved</td><td></td><td>✓</td></tr>
+    <tr><td><code>catchTagToCatchReason</code></td><td>💡</td><td>🔧</td><td>Suggests Effect.catchReason or Effect.catchReasons for handlers that re-fail unmatched reason._tag branches</td><td></td><td>✓</td></tr>
     <tr><td><code>catchToIgnore</code></td><td>💡</td><td>🔧</td><td>Suggests using Effect.ignore or Effect.ignoreCause instead of Effect.catch/catchCause returning Effect.void</td><td></td><td>✓</td></tr>
     <tr><td><code>catchToOrElseSucceed</code></td><td>💡</td><td>🔧</td><td>Suggests using Effect.orElseSucceed instead of Effect.catch + Effect.succeed</td><td>✓</td><td>✓</td></tr>
     <tr><td><code>deterministicKeys</code></td><td>➖</td><td>🔧</td><td>Enforces deterministic naming for service/tag/error identifiers based on class names</td><td>✓</td><td>✓</td></tr>

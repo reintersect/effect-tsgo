@@ -422,6 +422,30 @@
       }
     },
     {
+      "name": "promiseInEffectSuccess",
+      "group": "correctness",
+      "description": "Detects Promise types in Effect success channels where they are not awaited",
+      "defaultSeverity": "warning",
+      "fixable": false,
+      "supportedEffect": [
+        "v3",
+        "v4"
+      ],
+      "codes": [
+        377108
+      ],
+      "preview": {
+        "sourceText": "\nimport { Effect } from \"effect\"\n\ndeclare const save: (value: number) =\u003e Promise\u003cvoid\u003e\n\nexport const preview = Effect.succeed(1).pipe(Effect.map(save))\n",
+        "diagnostics": [
+          {
+            "start": 111,
+            "end": 151,
+            "text": "The Effect success channel contains a Promise that is not awaited. Use Effect.promise or Effect.tryPromise to represent async work. effect(promiseInEffectSuccess)"
+          }
+        ]
+      }
+    },
+    {
       "name": "schemaLiteralNonFinite",
       "group": "correctness",
       "description": "Reports statically known non-finite numbers passed to Schema literal constructors",
@@ -760,6 +784,29 @@
             "start": 339,
             "end": 364,
             "text": "This expression chains multiple `Effect.provide` calls. Providing Layers in multiple calls in a chain can break service lifecycle behavior compared with a single combined provide with merged layers. effect(multipleEffectProvide)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "preferUnsafeConstructor",
+      "group": "antipattern",
+      "description": "Suggests replacing Effect.runSync of a pure effect constructor with the synchronous *Unsafe variant exported by the same module",
+      "defaultSeverity": "suggestion",
+      "fixable": true,
+      "supportedEffect": [
+        "v4"
+      ],
+      "codes": [
+        377109
+      ],
+      "preview": {
+        "sourceText": "import { Effect, Scope } from \"effect\"\n\nexport const scope = Effect.runSync(Scope.make())\n",
+        "diagnostics": [
+          {
+            "start": 61,
+            "end": 89,
+            "text": "`Effect.runSync(Scope.make(...))` starts a fiber to run a pure constructor. Use the synchronous variant `Scope.makeUnsafe(...)` instead. effect(preferUnsafeConstructor)"
           }
         ]
       }
@@ -1456,6 +1503,52 @@
             "start": 150,
             "end": 162,
             "text": "`Effect.mapError` expresses the same error-type transformation more directly than `Effect.catch` followed by `Effect.fail`. effect(catchAllToMapError)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "catchChainToFirstSuccessOf",
+      "group": "style",
+      "description": "Suggests Effect.firstSuccessOf for consecutive error-independent Effect.catch fallbacks when the error type is preserved",
+      "defaultSeverity": "suggestion",
+      "fixable": false,
+      "supportedEffect": [
+        "v4"
+      ],
+      "codes": [
+        377107
+      ],
+      "preview": {
+        "sourceText": "import { Effect } from \"effect\"\n\ndeclare const primary: Effect.Effect\u003cstring, Error\u003e\ndeclare const secondary: Effect.Effect\u003cstring, Error\u003e\ndeclare const tertiary: Effect.Effect\u003cstring, Error\u003e\n\nexport const preview = primary.pipe(\n  Effect.catch(() =\u003e secondary),\n  Effect.catch(() =\u003e tertiary)\n)\n",
+        "diagnostics": [
+          {
+            "start": 265,
+            "end": 277,
+            "text": "Chained Effect.catch fallbacks that ignore the error can be written with Effect.firstSuccessOf. Wrap each lazy fallback with Effect.suspend to preserve when it is constructed. effect(catchChainToFirstSuccessOf)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "catchTagToCatchReason",
+      "group": "style",
+      "description": "Suggests Effect.catchReason or Effect.catchReasons for handlers that re-fail unmatched reason._tag branches",
+      "defaultSeverity": "suggestion",
+      "fixable": true,
+      "supportedEffect": [
+        "v4"
+      ],
+      "codes": [
+        377110
+      ],
+      "preview": {
+        "sourceText": "import { Effect } from \"effect\"\n\nclass RetryReason {\n  readonly _tag = \"RetryReason\"\n}\n\nclass FatalReason {\n  readonly _tag = \"FatalReason\"\n}\n\nclass AppError {\n  readonly _tag = \"AppError\"\n  constructor(readonly reason: RetryReason | FatalReason) {}\n}\n\ndeclare const program: Effect.Effect\u003cstring, AppError\u003e\n\nexport const fixable = program.pipe(\n  Effect.catchTag(\"AppError\", (error) =\u003e {\n    if (error.reason._tag === \"RetryReason\") return Effect.succeed(\"retry\")\n    return Effect.fail(error)\n  })\n)\n",
+        "diagnostics": [
+          {
+            "start": 348,
+            "end": 499,
+            "text": "Branching on `error.reason._tag` inside `Effect.catchTag` hand-rolls reason dispatch; use `Effect.catchReason` or `Effect.catchReasons`, which re-fail unmatched reasons automatically. effect(catchTagToCatchReason)"
           }
         ]
       }

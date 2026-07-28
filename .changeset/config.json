@@ -4,14 +4,14 @@
   "commit": false,
   "fixed": [
     [
-      "@effect/tsgo",
-      "@effect/tsgo-darwin-arm64",
-      "@effect/tsgo-darwin-x64",
-      "@effect/tsgo-linux-arm",
-      "@effect/tsgo-linux-arm64",
-      "@effect/tsgo-linux-x64",
-      "@effect/tsgo-win32-arm64",
-      "@effect/tsgo-win32-x64"
+      "@reintersect/effect-tsgo",
+      "@reintersect/effect-tsgo-darwin-arm64",
+      "@reintersect/effect-tsgo-darwin-x64",
+      "@reintersect/effect-tsgo-linux-arm",
+      "@reintersect/effect-tsgo-linux-arm64",
+      "@reintersect/effect-tsgo-linux-x64",
+      "@reintersect/effect-tsgo-win32-arm64",
+      "@reintersect/effect-tsgo-win32-x64"
     ]
   ],
   "linked": [],

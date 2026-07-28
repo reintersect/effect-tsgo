@@ -13,28 +13,6 @@ importers:
         version: 2.30.0(@types/node@24.10.13)
 
   _packages/tsgo:
-    optionalDependencies:
-      '@effect/tsgo-darwin-arm64':
-        specifier: workspace:*
-        version: link:../tsgo-darwin-arm64
-      '@effect/tsgo-darwin-x64':
-        specifier: workspace:*
-        version: link:../tsgo-darwin-x64
-      '@effect/tsgo-linux-arm':
-        specifier: workspace:*
-        version: link:../tsgo-linux-arm
-      '@effect/tsgo-linux-arm64':
-        specifier: workspace:*
-        version: link:../tsgo-linux-arm64
-      '@effect/tsgo-linux-x64':
-        specifier: workspace:*
-        version: link:../tsgo-linux-x64
-      '@effect/tsgo-win32-arm64':
-        specifier: workspace:*
-        version: link:../tsgo-win32-arm64
-      '@effect/tsgo-win32-x64':
-        specifier: workspace:*
-        version: link:../tsgo-win32-x64
     devDependencies:
       '@effect/platform-node':
         specifier: ^4.0.0-beta.101
@@ -57,6 +35,28 @@ importers:
       vitest:
         specifier: ^3.2.1
         version: 3.2.4(@types/node@24.10.13)(yaml@2.9.0)
+    optionalDependencies:
+      '@reintersect/effect-tsgo-darwin-arm64':
+        specifier: workspace:*
+        version: link:../tsgo-darwin-arm64
+      '@reintersect/effect-tsgo-darwin-x64':
+        specifier: workspace:*
+        version: link:../tsgo-darwin-x64
+      '@reintersect/effect-tsgo-linux-arm':
+        specifier: workspace:*
+        version: link:../tsgo-linux-arm
+      '@reintersect/effect-tsgo-linux-arm64':
+        specifier: workspace:*
+        version: link:../tsgo-linux-arm64
+      '@reintersect/effect-tsgo-linux-x64':
+        specifier: workspace:*
+        version: link:../tsgo-linux-x64
+      '@reintersect/effect-tsgo-win32-arm64':
+        specifier: workspace:*
+        version: link:../tsgo-win32-arm64
+      '@reintersect/effect-tsgo-win32-x64':
+        specifier: workspace:*
+        version: link:../tsgo-win32-x64
 
   _packages/tsgo-darwin-arm64: {}
 

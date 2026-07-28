@@ -282,7 +282,7 @@ const computePackageJsonChanges = (
         upsertDependency(tracker, current.sourceFile, rootObj, targetTypescriptPackageName, targetTypescript)
       }
 
-      // Handle @effect/tsgo dependency
+      // Handle @reintersect/effect-tsgo dependency
       if (Option.isSome(target.lspVersion)) {
         const targetDepType = target.lspVersion.value.dependencyType
         const targetVersion = target.lspVersion.value.version
