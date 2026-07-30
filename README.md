@@ -28,6 +28,45 @@
 > `workflow_dispatch` on `release.yml` with the `release_sha` input (the Version Packages commit on
 > `main`); the merge of a Version Packages PR will not trigger it automatically.
 
+## Direct usage without patching (fork addition)
+
+### CLI: the `tsgo` bin
+
+The main package ships a second bin, `tsgo`, which launches the packaged Effect binary for your
+platform directly — a plain devDependency gives every consumer a real `node_modules/.bin/tsgo`
+with no `typescript` install to patch:
+
+```bash
+pnpm add -D @reintersect/effect-tsgo
+pnpm tsgo --project tsconfig.json
+```
+
+By default it runs the platform package's `lib/tsc` (built from `generated/latest`, tracking npm
+`typescript@latest`). Set `ETSGO_CHANNEL=next` to run `lib/tsc-next` (built from `main`, tracking
+`typescript@next`). Exit codes and stdio pass through unchanged.
+
+### Editor: `typescript.native-preview.tsdk`
+
+The `TypeScriptTeam.native-preview` VS Code/Cursor extension accepts any directory containing a
+binary named `tsc` or `tsgo` as a tsdk (it appears in the version picker as "(local)") and starts
+it with `--lsp`, which the packaged binaries support. The platform packages already ship `lib/tsc`,
+so no patching is needed — point the setting at your platform package (the path is
+platform-specific):
+
+```jsonc
+// .vscode/settings.json
+{
+  "typescript.native-preview.tsdk": "./node_modules/@reintersect/effect-tsgo-darwin-arm64/lib"
+}
+```
+
+The extension tries `tsc` before `tsc-next` in that directory; both are Effect-patched. Requires
+`@reintersect/effect-tsgo-*` >= 0.27.2 — earlier tarballs shipped the binaries without the
+executable bit, and the extension spawns them directly. The extension's package-based tsdk
+resolution hardcodes the `@typescript/<name>-<platform>-<arch>` scope, so pointing the setting at
+the main package directory does not work; use the `lib` directory form above (or keep using
+`effect-tsgo patch` against an installed `typescript`).
+
 A wrapper around [TypeScript-Go](https://github.com/microsoft/TypeScript-Go) that builds the Effect Language Service, providing Effect-TS diagnostics and quick fixes.
 This project targets **Effect V4** (codename: "smol") primarily and also Effect V3.
 

@@ -153,8 +153,12 @@ jobs:
               cp "${artifact_dir}/${binary_name}.exe" "${package_dir}/${binary_name}.exe"
               cp "${artifact_dir}/${binary_name}.exe.json" "${package_dir}/${binary_name}.exe.json"
             else
+              # Artifact upload/download strips file modes; restore the executable
+              # bit so npm records it in the tarball and installed binaries can be
+              # spawned directly (editor tsdk integration, tsgo launcher).
               cp "${artifact_dir}/${binary_name}" "${package_dir}/${binary_name}"
               cp "${artifact_dir}/${binary_name}.json" "${package_dir}/${binary_name}.json"
+              chmod 755 "${package_dir}/${binary_name}"
             fi
           done
 

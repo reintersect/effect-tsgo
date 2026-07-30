@@ -1,6 +1,6 @@
 {
   "name": "@reintersect/effect-tsgo-linux-arm",
-  "version": "0.27.0",
+  "version": "0.27.3",
   "description": "Effect Language Service for TypeScript-Go — Effect-specific diagnostics and hover features.",
   "license": "MIT",
   "repository": {
@@ -12,7 +12,11 @@
   "homepage": "https://github.com/reintersect/effect-tsgo#readme",
   "publishConfig": {
     "access": "public",
-    "provenance": true
+    "provenance": true,
+    "executableFiles": [
+      "./lib/tsc",
+      "./lib/tsc-next"
+    ]
   },
   "preferUnplugged": true,
   "files": [

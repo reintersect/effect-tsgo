@@ -9,6 +9,7 @@ import { defineConfig } from "tsdown"
 export default defineConfig({
   entry: {
     "effect-tsgo": "./src/cli.ts",
+    "tsgo": "./src/tsgo.ts",
   },
   inlineOnly: false,
   outDir: "./dist",

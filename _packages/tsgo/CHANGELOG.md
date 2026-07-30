@@ -1,5 +1,61 @@
 # @effect/tsgo
 
+## 0.27.3
+
+### Patch Changes
+
+- 23adc6a: Extend the darwin realpath patch's regression suite with a
+  `TestRealpathSymlinkedPackageDir` test that mirrors pnpm's virtual-store
+  layout: one package reachable through its canonical store path and through a
+  workspace `node_modules` symlink, containing both copied (`nlink == 1`,
+  pnpm `patchedDependencies`) and hardlink-deduplicated files, resolved
+  concurrently while the kernel name cache is churned. Every spelling must
+  resolve to one canonical path; a divergence would give the compiler two
+  module identities for the same file and produce phantom assignability
+  errors.
+
+  No behavioral change: an investigation of nondeterministic TS2345 dual
+  module identities reproduced them only under a stale
+  `@typescript/native-preview` 2026-03-12 nightly that was shadowing this
+  package's `tsgo` bin — the packaged binaries passed the same cold-cache
+  repro 50+ times consecutively.
+
+## 0.27.2
+
+### Patch Changes
+
+- 472483c: Ship the packaged platform binaries with the executable bit set. `changeset
+publish` packs through `pnpm publish`, which only marks `bin` entries
+  executable, so 0.27.1's `lib/tsc` and `lib/tsc-next` landed as 0644 despite
+  the workflow chmod; the unix platform packages now declare
+  `publishConfig.executableFiles`. This makes the
+  `typescript.native-preview.tsdk` directory setting work without any prior
+  chmod (the `tsgo` launcher and `effect-tsgo` CLI already chmod on first
+  run).
+
+## 0.27.1
+
+### Patch Changes
+
+- 1773c01: Rebuild the packaged `tsc` binary from the refreshed `generated/latest`
+  branch. The `tsc` binary in 0.27.0 was built from a snapshot that predated
+  the upstream sync, so it carried the darwin realpath patch but not the new
+  `abortControllerInEffect` diagnostic that 0.27.0's changelog advertises
+  (`tsc-next` had both). Both packaged binaries now include the full
+  diagnostic set and the realpath fix.
+- 1773c01: Add a `tsgo` bin to the main package: a minimal launcher that resolves the
+  platform package and executes its packaged binary directly (`lib/tsc` by
+  default, `lib/tsc-next` with `ETSGO_CHANNEL=next`), forwarding arguments,
+  stdio, and the exit code. A plain devDependency now provides a working
+  `node_modules/.bin/tsgo` without patching an installed `typescript`.
+
+  Platform packages now ship their binaries with the executable bit set, so
+  the `TypeScriptTeam.native-preview` extension can use
+  `"typescript.native-preview.tsdk": "./node_modules/@reintersect/effect-tsgo-<platform>-<arch>/lib"`
+  directly (the extension accepts a directory containing a `tsc` binary and
+  starts it with `--lsp`). `effect-tsgo patch` remains unchanged as the
+  fallback flow.
+
 ## 0.27.0
 
 ### Minor Changes

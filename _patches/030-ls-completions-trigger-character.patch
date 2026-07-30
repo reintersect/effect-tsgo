@@ -1,0 +1,86 @@
+diff --git a/internal/ls/completions.go b/internal/ls/completions.go
+--- a/internal/ls/completions.go
++++ b/internal/ls/completions.go
+@@ -2763,7 +2763,19 @@
+ 	case "*":
+ 		return isPotentiallyValidJSDocSnippetCompletionPosition(file, position)
+ 	default:
+-		panic("Unknown trigger character: " + triggerCharacter)
++		// EFFECT PATCH: do not panic on trigger characters we do not handle.
++		//
++		// A client is only supposed to send the characters advertised in
++		// `TriggerCharacters`, but real ones do not always honour that. Wrapper
++		// language servers (e.g. the Svelte language server) forward a single
++		// union of trigger characters to every downstream request, so
++		// `textDocument/completion` arrives with characters this server only
++		// advertises for signature help (`(`, `,`) or VS auto-insert (`>`).
++		//
++		// Panicking loses the entire request. Treat an unrecognised character
++		// the same way a well-behaved client would be treated if it had never
++		// sent it: not a valid completion trigger, so no completions.
++		return false
+ 	}
+ }
+ 
+diff --git a/internal/ls/completions_trigger_test.go b/internal/ls/completions_trigger_test.go
+new file mode 100644
+--- /dev/null
++++ b/internal/ls/completions_trigger_test.go
+@@ -0,0 +1,57 @@
++package ls
++
++import (
++	"testing"
++
++	"github.com/microsoft/typescript-go/internal/ast"
++	"github.com/microsoft/typescript-go/internal/core"
++	"github.com/microsoft/typescript-go/internal/parser"
++	"github.com/microsoft/typescript-go/internal/tspath"
++)
++
++// EFFECT PATCH: regression test for the `Unknown trigger character` panic.
++//
++// Wrapper language servers forward one union of trigger characters to every
++// downstream request, so `textDocument/completion` can arrive with characters
++// this server only advertises for signature help (`(`, `,`) or VS auto-insert
++// (`>`). Those used to panic and take the whole request down.
++func TestIsValidTriggerDoesNotPanicOnUnadvertisedCharacters(t *testing.T) {
++	t.Parallel()
++
++	text := "const enclosing = <div></div>\nfoo(\n"
++	sourceFile := parser.ParseSourceFile(ast.SourceFileParseOptions{
++		FileName: "/index.tsx",
++		Path:     tspath.Path("/index.tsx"),
++	}, text, core.ScriptKindTSX)
++
++	// Characters the server advertises for signature help / auto-insert, plus a
++	// couple of arbitrary ones a misbehaving client could send.
++	for _, triggerCharacter := range []string{">", "(", ",", ")", "}", "!", "", "abc"} {
++		t.Run("trigger_"+triggerCharacter, func(t *testing.T) {
++			t.Parallel()
++			for position := range len(text) + 1 {
++				contextToken, _ := getRelevantTokens(position, sourceFile)
++				if isValidTrigger(sourceFile, triggerCharacter, contextToken, position) {
++					t.Fatalf("isValidTrigger(%q) at position %d = true, want false", triggerCharacter, position)
++				}
++			}
++		})
++	}
++}
++
++// The advertised trigger characters must keep working after the panic removal.
++func TestIsValidTriggerStillAcceptsAdvertisedCharacters(t *testing.T) {
++	t.Parallel()
++
++	text := "const x = { a: 1 };\nx.\n"
++	sourceFile := parser.ParseSourceFile(ast.SourceFileParseOptions{
++		FileName: "/index.ts",
++		Path:     tspath.Path("/index.ts"),
++	}, text, core.ScriptKindTS)
++
++	position := len(text) - 1 // just after `x.`
++	contextToken, _ := getRelevantTokens(position, sourceFile)
++	if !isValidTrigger(sourceFile, ".", contextToken, position) {
++		t.Fatal(`isValidTrigger(".") = false, want true`)
++	}
++}
