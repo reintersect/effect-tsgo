@@ -192,6 +192,7 @@ type extra_Checker struct {
   reverseHomomorphicMappedCache map[checker.ReverseMappedTypeKey]*checker.Type
   iterationTypesCache map[checker.IterationTypesKey]checker.IterationTypes
   markerTypes collections.Set[*checker.Type]
+  resolvingExplicitTypeOfSymbol collections.Set[*ast.Symbol]
   undefinedSymbol *ast.Symbol
   argumentsSymbol *ast.Symbol
   requireSymbol *ast.Symbol
@@ -337,7 +338,7 @@ type extra_Checker struct {
   typeofType *checker.Type
   typeResolutions []checker.TypeResolution
   resolutionStart int
-  inVarianceComputation bool
+  varianceStack []checker.VarianceStackEntry
   apparentArgumentCount *int
   lastGetCombinedNodeFlagsNode *ast.Node
   lastGetCombinedNodeFlagsResult ast.NodeFlags
@@ -826,6 +827,8 @@ const ObjectFlagsIsGenericType = checker.ObjectFlagsIsGenericType
 const ObjectFlagsIsGenericTypeComputed = checker.ObjectFlagsIsGenericTypeComputed
 const ObjectFlagsIsNeverIntersection = checker.ObjectFlagsIsNeverIntersection
 const ObjectFlagsIsNeverIntersectionComputed = checker.ObjectFlagsIsNeverIntersectionComputed
+const ObjectFlagsIsUniformEnum = checker.ObjectFlagsIsUniformEnum
+const ObjectFlagsIsUniformEnumComputed = checker.ObjectFlagsIsUniformEnumComputed
 const ObjectFlagsIsUnknownLikeUnion = checker.ObjectFlagsIsUnknownLikeUnion
 const ObjectFlagsIsUnknownLikeUnionComputed = checker.ObjectFlagsIsUnknownLikeUnionComputed
 const ObjectFlagsJSLiteral = checker.ObjectFlagsJSLiteral
@@ -1251,6 +1254,7 @@ const VarianceFlagsUnmeasurable = checker.VarianceFlagsUnmeasurable
 const VarianceFlagsUnreliable = checker.VarianceFlagsUnreliable
 const VarianceFlagsVarianceMask = checker.VarianceFlagsVarianceMask
 type VarianceLinks = checker.VarianceLinks
+type VarianceStackEntry = checker.VarianceStackEntry
 type VerbosityContext = checker.VerbosityContext
 type WideningContext = checker.WideningContext
 type WideningKind = checker.WideningKind
